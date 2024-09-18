@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging-compat.js"></script>
     <title>NodeJS Messaging App</title>
   </head>
   <body>
@@ -21,7 +23,8 @@
       });
 
       const form = document.getElementById("messageForm");
-      
+      const messageDisplay = document.getElementById("messageDisplay");
+
       form.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -29,8 +32,57 @@
         const body = document.getElementById("body").value;
 
         socket.emit("sendMessage", { title, body });
-
         form.reset();
+      });
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBOw--CMJ93LP2LLjTXEAVxhFrRD5xangE",
+        authDomain: "nodejs-messaging-app.firebaseapp.com",
+        projectId: "nodejs-messaging-app",
+        storageBucket: "nodejs-messaging-app.appspot.com",
+        messagingSenderId: "835564132784",
+        appId: "1:835564132784:web:41605abf5d5e336afc1e75",
+        measurementId: "G-S49PHBFPQV",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const messaging = firebase.messaging();
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log(
+              "Service Worker registered with scope:",
+              registration.scope
+            );
+          })
+          .catch((err) => {
+            console.error("Error registering Service Worker:", err);
+          });
+      }
+
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          messaging
+            .getToken({
+              vapidKey:
+                "BF5t8pGzYAF2C4rdCfmxg3Hue-GLfXEuL5DZn2M-lJ-My9P9O6gkUErywoEf2jk-TVeri2o4s6Ucndn1r649ugU",
+            })
+            .then((token) => {
+              console.log("FCM Token:", token);
+              socket.emit("registerToken", token);
+            })
+            .catch((err) => {
+              console.error("Error retrieving FCM token:", err);
+            });
+        } else {
+          console.error("Permission not granted for notifications.");
+        }
+      });
+
+      messaging.onMessage((payload) => {
+        console.log("Message received: ", payload);
       });
     </script>
   </body>
