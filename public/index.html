@@ -15,6 +15,9 @@
       <button type="submit">Send</button>
     </form>
 
+    <div id="formDisplay"></div>
+    <div id="messageDisplay"></div>
+
     <script>
       const socket = io.connect("/");
 
@@ -33,6 +36,9 @@
 
         socket.emit("sendMessage", { title, body });
         form.reset();
+
+        // Виведення даних з форми
+        formDisplay.innerHTML = `<h3>Data from the form</h3><p>Title: ${title}</p><p>Message: ${body}</p>`;
       });
 
       const firebaseConfig = {
@@ -83,6 +89,9 @@
 
       messaging.onMessage((payload) => {
         console.log("Message received: ", payload);
+
+        // Виведення повідомлення Firebase
+        messageDisplay.innerHTML = `<h3>Message from Firebase Cloud Messaging (FCM)</h3><p>Title: ${payload.notification.title}</p><p>Message: ${payload.notification.body}</p>`;
       });
     </script>
   </body>
