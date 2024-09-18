@@ -1,0 +1,30 @@
+{
+  "name": "nodejs-messaging-app-test",
+  "version": "1.0.0",
+  "description": "nodejs-messaging-app-test",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerhiiRepinskyi/nodejs-messaging-app-test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SerhiiRepinskyi/nodejs-messaging-app-test/issues"
+  },
+  "homepage": "https://github.com/SerhiiRepinskyi/nodejs-messaging-app-test#readme",
+  "dependencies": {
+    "express": "^4.21.0",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
